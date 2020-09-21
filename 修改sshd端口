@@ -15,7 +15,7 @@ Port 9999
 
 #先查看SELinux开放给ssh使用的端口
 
-semanage port -l|grep ssh
+  semanage port -l|grep ssh
 
 #系统输出如下：
 
@@ -23,7 +23,7 @@ semanage port -l|grep ssh
 
 #可知，SELinux没有给SSH开放9999端口，那么我们来添加该端口：
 
-semanage port -a -t ssh_port_t -p tcp 9999
+  semanage port -a -t ssh_port_t -p tcp 9999
 
 #完成后再次查看端口
 
@@ -39,7 +39,7 @@ semanage port -l|grep ssh
 
 #先查看防火墙是否开启了9999端口：
 
-firewall-cmd --permanent --query-port=9999/tcp
+  firewall-cmd --permanent --query-port=9999/tcp
 
 #系统输出如下：
 
@@ -47,7 +47,7 @@ firewall-cmd --permanent --query-port=9999/tcp
 
 #这表示没有开放9999端口，那么添加下该端口：
 
-firewall-cmd --permanent --add-port=9999/tcp
+  firewall-cmd --permanent --add-port=9999/tcp
 
 #系统输出如下：
 
@@ -55,11 +55,11 @@ firewall-cmd --permanent --add-port=9999/tcp
 
 #重新加载防火墙策略：
 
-firewall-cmd --reload
+  firewall-cmd --reload
 
 #执行成功后，查看9999端口是否被开启：
 
-firewall-cmd --permanent --query-port=9999/tcp
+  firewall-cmd --permanent --query-port=9999/tcp
 
 #系统输出如下：
 
@@ -69,8 +69,8 @@ firewall-cmd --permanent --query-port=9999/tcp
 
 #重启SSH服务和防火墙
 
-systemctl restart sshd
-systemctl restart firewalld.service
+  systemctl restart sshd
+  systemctl restart firewalld.service
 
 #第五步
 
@@ -78,7 +78,7 @@ systemctl restart firewalld.service
 
 #验证9999端口可以登录后
 
-vim /etc/ssh/sshd_config
+  vim /etc/ssh/sshd_config
 
 #找到“Port 22”，前面加上#，修改成：
 
@@ -87,4 +87,4 @@ Port 9999
 
 重启ssh服务
 
-systemctl restart sshd
+  systemctl restart sshd
