@@ -1,0 +1,43 @@
+#centos的yum源中默认是没有mysql的，先去官网下载mysql的repo源并安装。
+
+
+#下载rpm源，官网：https://dev.mysql.com/downloads/repo/yum/
+rpm -Uvh https://repo.mysql.com//mysql80-community-release-el8-1.noarch.rpm
+
+#查看可用的mysql版本以及禁用/启用情况：
+yum repolist all | grep mysql
+
+#修改源文件,把里面的8.0enabled改为1就可以了，其他的版本改为0
+Vi /etc/yum.repos.d/mysql-community.repo
+
+#只留下面3个启用
+mysql-connectors-community
+mysql-tools-community
+mysql80-community
+
+#修改完成后安装mysql
+yum install -y mysql-community-server
+
+#安装完成之后,启动mysql
+systemctl start mysqld
+
+#设置开机启动
+systemctl enable mysqld
+systemctl daemon-reload
+
+#查看随机生成的密码,注意记住密码
+grep ‘temporary password’ /var/log/mysqld.log
+
+#登录Mysql,输入原始生成的随机密码
+mysql -uroot -p
+
+#改变mysql密码策略 ( 密码强度默认为中等，大小写字母、数字、特殊符号，只有修改成功后才能修改配置再设置更简单的密码 )
+set global validate_password.policy=0;
+set global validate_password.length=1;
+
+#修改root密码
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'new password';(单引号和分号不能省，一定记住密码)
+#退出mysql,重新启动即可生效，安装成功。
+
+#退出命令：quit 重启命令：systemctl restart mysqld
+
