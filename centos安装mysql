@@ -17,6 +17,8 @@ mysql80-community
 
 #修改完成后安装mysql
 yum install -y mysql-community-server
+#上面个命令貌似出问题了，如果不行用下面个
+dnf install @mysql
 
 #安装完成之后,启动mysql
 systemctl start mysqld
@@ -27,6 +29,18 @@ systemctl daemon-reload
 
 #查看随机生成的密码,注意记住密码
 grep ‘temporary password’ /var/log/mysqld.log
+#这条也经常不起作用，使用安全设置脚本
+mysql_secure_installation
+
+#要求你配置VALIDATE PASSWORD component（验证密码组件）： 输入y ，回车进入该配置
+
+#选择密码验证策略等级， 我这里选择0 （low），回车
+#输入新密码两次
+#确认是否继续使用提供的密码？输入y ，回车
+#移除匿名用户？ 输入y ，回车
+#不允许root远程登陆？ 我这里需要远程登陆，所以输入n ，回车
+#移除test数据库？ 输入y ，回车
+#重新载入权限表？ 输入y ，回车
 
 #登录Mysql,输入原始生成的随机密码
 mysql -uroot -p
